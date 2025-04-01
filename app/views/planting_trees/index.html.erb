@@ -1,0 +1,90 @@
+<header>
+  <h1 class="text-white text-2xl">クリックで木を植えて、ズームしたり色々な角度から眺めてみてね。<br>リロードで木は１本に戻ります😭</h1>
+  <li>
+      <%= link_to "TOP",root_path, class: "w-200 bg-green-400 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md shadow-md transition" %>
+  </li>
+  <br>
+  <button id="addTreeButton" class="bg-green-400 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md shadow-md transition">木を植える</button>
+</header>
+
+<script>
+    // 1. シーン、カメラ、レンダラーの設定
+    const scene = new THREE.Scene(); // 3D空間を作る
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // カメラを作成
+    const renderer = new THREE.WebGLRenderer(); // 描画するための設定
+    renderer.setSize(window.innerWidth, window.innerHeight); // 画面いっぱいに描画
+    document.body.appendChild(renderer.domElement); // 描画領域を画面に追加
+        // 背景色の設定
+    scene.background = new THREE.Color('#CDE6C7');
+
+
+    // 2. 照明を追加
+    const light = new THREE.DirectionalLight(0xffffff, 1); // 太陽のような光
+    light.position.set(10, 10, 10).normalize();
+    scene.add(light); // シーンに光を追加
+
+    // 3. GLTFLoaderで木の3Dモデルを読み込む
+    const loader = new THREE.GLTFLoader(); // モデルを読み込む準備
+    loader.load('./night_yanagawa_tree.glb', function(gltf) {
+        const model = gltf.scene; // モデルのシーンを取得
+        model.scale.set(1, 1, 1); // モデルの大きさを調整
+        scene.add(model); // シーンにモデルを追加
+
+        // 木を複製する関数
+        function cloneTree() {
+            const clonedTree = model.clone(); // モデルを複製
+            clonedTree.position.set(Math.random() * 500 - 250, 0, Math.random() * 500 - 250); // ランダムな位置に配置
+            scene.add(clonedTree); // 複製した木をシーンに追加
+        }
+
+        // ボタンがクリックされたときに木を複製する
+        document.getElementById('addTreeButton').addEventListener('click', cloneTree);
+    });
+
+    // 4. カメラの位置
+    camera.position.z = 50; //数が大きいほど引きになる
+
+    // 5. OrbitControlsを使ってカメラを操作可能にする
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.screenSpacePanning = false;
+
+    // 視点の下限を制限（下方向に回転しないようにする、木の裏側までが見えなくなる）
+    controls.maxPolarAngle = Math.PI / 2;  // 90度に制限（平面より下には行かない）
+
+    // 6. アニメーションループ
+    function animate() {
+        requestAnimationFrame(animate); // アニメーションを繰り返し実行
+        controls.update(); // カメラの更新
+        renderer.render(scene, camera); // シーンを描画
+    }
+    animate(); // アニメーション開始
+
+    // 7. ウィンドウサイズ変更時にレンダラーとカメラを調整
+    window.addEventListener('resize', () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+
+    //document.addEventListener("DOMContentLoaded", function () {
+    // let treeCount = 0;
+    // const treeCounterElement = document.getElementById("treeCounter");
+
+    // function updateTreeCounter() {
+        // treeCounterElement.textContent = `現在 ${treeCount} 本`;
+    // }
+
+    // document.getElementById("addTreeButton").addEventListener("click", () => {
+        // treeCount++;
+        // updateTreeCounter();
+        // });
+    // });
+
+    </script>
+    <!--<p id="treeCounter">現在 1 本</p>-->
+  </body>
+</html>
