@@ -26,3 +26,11 @@ cable:
     username: postgres
     password: password
     host: db
+
+queue:
+    adapter: postgresql
+    encoding: unicode
+    database: myapp_production_queue
+    username: postgres
+    password: password
+    host: db
