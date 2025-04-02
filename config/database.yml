@@ -34,3 +34,10 @@ queue:
     username: postgres
     password: password
     host: db
+
+cache:
+    adapter: postgresql
+    database: myapp_cache_production
+    username: myapp
+    password: postgres
+    host: db
