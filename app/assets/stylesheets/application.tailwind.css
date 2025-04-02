@@ -3,6 +3,7 @@
 @layer theme {
     :root {
       --color-blue-600:oklch(0.2 0.1 270);
+      --color-green-600: oklch(0.627 0.194 149.214);
       --font-handwritten: 'Dancing Script', cursive;
     }
   }
