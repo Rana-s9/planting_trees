@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@layer theme {
+    :root {
+      --color-blue-600:oklch(0.2 0.1 270);
+      --font-handwritten: 'Dancing Script', cursive;
+    }
+  }
+
+@layer components {
+    #video-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      text-align: center;
+      color: white;
+      font-family: var(--font-handwritten); 
+    }
+  }
+
